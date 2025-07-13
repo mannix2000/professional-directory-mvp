@@ -1,42 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Professional Directory</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professional Directory MVP</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 p-6">
-  <h1 class="text-2xl font-bold mb-4">Search Professionals</h1>
-  <input type="text" id="search" class="border p-2 w-full mb-4" placeholder="Search by name or service...">
-  <div id="results" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Professional Directory MVP</h1>
+
+    <!-- Upload Section -->
+    <section class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-2">Upload Documents</h2>
+      <input type="file" id="uploadInput" class="block mb-2" />
+      <button onclick="uploadDoc()" class="bg-blue-600 text-white px-4 py-2 rounded">Upload</button>
+      <p id="uploadMessage" class="text-green-600 mt-2 hidden">✅ Document uploaded!</p>
+    </section>
+
+    <!-- Toggle Listing Status -->
+    <section class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-2">Listing Status</h2>
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="statusToggle" class="mr-2" checked>
+        <span>Active</span>
+      </label>
+    </section>
+
+    <!-- Search Filter -->
+    <section class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-xl font-semibold mb-2">Search Professionals</h2>
+      <input type="text" id="searchInput" placeholder="Search by name, service, or region..." class="w-full p-2 border rounded mb-4" />
+      <div id="results" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+  </div>
 
   <script>
     const professionals = [
-      { name: "Jane Smith", region: "California", service: "Legal Consultant" },
-      { name: "John Doe", region: "New York", service: "Financial Advisor" }
+      { name: "Jane Smith", service: "Legal Consultant", region: "California" },
+      { name: "John Doe", service: "Financial Advisor", region: "New York" },
+      { name: "Maria Lopez", service: "Insurance Agent", region: "Texas" }
     ];
 
-    const renderResults = (list) => {
-      const container = document.getElementById("results");
-      container.innerHTML = "";
-      list.forEach(p => {
-        container.innerHTML += `
-          <div class="bg-white p-4 shadow rounded">
-            <h2 class="text-xl font-semibold">${p.name}</h2>
-            <p>${p.service}</p>
-            <p class="text-sm text-gray-500">${p.region}</p>
-          </div>`;
-      });
-    };
+    const resultsContainer = document.getElementById("results");
+    const searchInput = document.getElementById("searchInput");
 
-    document.getElementById("search").addEventListener("input", (e) => {
-      const keyword = e.target.value.toLowerCase();
+    function renderResults(list) {
+      resultsContainer.innerHTML = "";
+      list.forEach(pro => {
+        resultsContainer.innerHTML += `
+          <div class="p-4 bg-white rounded shadow">
+            <h3 class="text-lg font-bold">${pro.name}</h3>
+            <p>${pro.service}</p>
+            <p class="text-sm text-gray-500">${pro.region}</p>
+          </div>
+        `;
+      });
+    }
+
+    searchInput.addEventListener("input", () => {
+      const keyword = searchInput.value.toLowerCase();
       const filtered = professionals.filter(p =>
         p.name.toLowerCase().includes(keyword) ||
-        p.service.toLowerCase().includes(keyword)
+        p.service.toLowerCase().includes(keyword) ||
+        p.region.toLowerCase().includes(keyword)
       );
       renderResults(filtered);
     });
+
+    function uploadDoc() {
+      document.getElementById("uploadMessage").classList.remove("hidden");
+    }
 
     renderResults(professionals);
   </script>
